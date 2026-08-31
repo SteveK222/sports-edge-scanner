@@ -26,7 +26,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
-          SPORT_KEYS: americanfootball_nfl,basketball_nba
+          SPORT_KEYS: americanfootball_nfl,basketball_nba,baseball_mlb
           REGIONS: us
           MARKETS: h2h
           MIN_EDGE_PCT: '4.0'
