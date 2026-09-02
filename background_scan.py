@@ -162,60 +162,61 @@ def hr_scan(db):
                 REGIONS,
                 "batter_home_runs",
             )
+                       print(
+            "DEBUG HR RESPONSE:",
+            event["away_team"],
+            "@",
+            event["home_team"],
+            "| bookmakers:",
+            len(event_odds.get("bookmakers", []))
+        )
+
+        for book in event_odds.get("bookmakers", []):
             print(
-    "DEBUG HR RESPONSE:",
-    event["away_team"],
-    "@",
-    event["home_team"],
-    "| bookmakers:",
-    len(event_odds.get("bookmakers", []))
-)
-
-for book in event_odds.get("bookmakers", []):
-    print(
-        "  BOOK:",
-        book.get("title"),
-        "| MARKETS:",
-        [m.get("key") for m in book.get("markets", [])]
-    )
-
-    for market in book.get("markets", []):
-        if market.get("key") == "batter_home_runs":
-            print(
-                "    HR OUTCOMES SAMPLE:",
-                market.get("outcomes", [])[:4]
+                "  BOOK:",
+                book.get("title"),
+                "| MARKETS:",
+                [m.get("key") for m in book.get("markets", [])]
             )
 
-            candidates = get_hr_candidates(
-                event_odds
+            for market in book.get("markets", []):
+                if market.get("key") == "batter_home_runs":
+                    print(
+                        "    HR OUTCOMES SAMPLE:",
+                        market.get("outcomes", [])[:4]
+                    )
+
+        candidates = get_hr_candidates(
+            event_odds
+        )
+
+        all_candidates.extend(
+            candidates
+        )
+
+        game_qualified = [
+            p for p in candidates
+            if p["edge_pct"] >= HR_MIN_EDGE_PCT
+            and p["ev_pct"] >= HR_MIN_EV_PCT
+        ]
+
+        print(
+            f"{event['away_team']} @ "
+            f"{event['home_team']} | "
+            f"HR candidates={len(candidates)} | "
+            f"qualified={len(game_qualified)} | "
+            f"quota={quota}"
+        )
+
+        for pick in game_qualified:
+            save_and_alert(
+                db,
+                pick,
             )
 
-            all_candidates.extend(
-                candidates
+            qualified.append(
+                pick
             )
-
-            game_qualified = [
-                p for p in candidates
-                if p["edge_pct"] >= HR_MIN_EDGE_PCT
-                and p["ev_pct"] >= HR_MIN_EV_PCT
-            ]
-
-            print(
-                f"{event['away_team']} @ "
-                f"{event['home_team']} | "
-                f"HR candidates={len(candidates)} | "
-                f"qualified={len(game_qualified)} | "
-                f"quota={quota}"
-            )
-
-            for pick in game_qualified:
-
-                save_and_alert(
-                    db,
-                    pick,
-                )
-
-                qualified.append(
                     pick
                 )
 
