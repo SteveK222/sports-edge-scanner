@@ -162,7 +162,7 @@ def hr_scan(db):
                 REGIONS,
                 "batter_home_runs",
             )
-                       print(
+        print(
             "DEBUG HR RESPONSE:",
             event["away_team"],
             "@",
