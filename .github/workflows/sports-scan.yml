@@ -29,6 +29,6 @@ jobs:
           SPORT_KEYS: americanfootball_nfl,basketball_nba,baseball_mlb
           REGIONS: us
           MARKETS: h2h
-          MIN_EDGE_PCT: '4.0'
-          MIN_EV_PCT: '3.0'
+          MIN_EDGE_PCT: '2.0'
+          MIN_EV_PCT: '1.0'
           PAPER_STAKE_UNITS: '1.0'
