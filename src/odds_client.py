@@ -23,3 +23,51 @@ def get_odds(api_key: str, sport: str, regions: str, markets: str):
         'used': r.headers.get('x-requests-used'),
         'last': r.headers.get('x-requests-last'),
     }
+def get_events(api_key: str, sport: str):
+    r = requests.get(
+        f"{BASE}/sports/{sport}/events",
+        params={
+            "apiKey": api_key,
+            "dateFormat": "iso",
+        },
+        timeout=30,
+    )
+
+    r.raise_for_status()
+    return r.json()
+
+
+def get_event_odds(
+    api_key: str,
+    sport: str,
+    event_id: str,
+    regions: str,
+    markets: str,
+):
+    r = requests.get(
+        f"{BASE}/sports/{sport}/events/{event_id}/odds",
+        params={
+            "apiKey": api_key,
+            "regions": regions,
+            "markets": markets,
+            "oddsFormat": "american",
+            "dateFormat": "iso",
+        },
+        timeout=30,
+    )
+
+    r.raise_for_status()
+
+    quota = {
+        "remaining": r.headers.get(
+            "x-requests-remaining"
+        ),
+        "used": r.headers.get(
+            "x-requests-used"
+        ),
+        "last": r.headers.get(
+            "x-requests-last"
+        ),
+    }
+
+    return r.json(), quota
