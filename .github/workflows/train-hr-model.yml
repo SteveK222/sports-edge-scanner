@@ -32,7 +32,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add models/hr_model.joblib models/hr_training_data.csv
+          git add models/hr_model.joblib models/hr_training_data.csv models/hr_batter_features.csv
 
           if git diff --cached --quiet; then
             echo "No model changes to commit"
