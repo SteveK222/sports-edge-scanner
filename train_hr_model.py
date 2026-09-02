@@ -469,48 +469,48 @@ def build_training_table(df: pd.DataFrame) -> pd.DataFrame:
     rows = build_contact_features(df, rows)
     rows = build_pitcher_features(df, rows)
     rows = finalize_features(rows)
-       snapshot_columns = ["batter"] + FEATURE_COLUMNS
-
-    latest_snapshot = (
-        rows.sort_values(["batter", "game_date", "game_pk"])
-        .groupby("batter", as_index=False)
-        .tail(1)[snapshot_columns]
-        .copy()
-    )
-
-    league_pitcher_hr_rate = float(
-        pd.to_numeric(
-            rows["pitcher_hr_rate"],
-            errors="coerce",
-        ).replace(
+           snapshot_columns = ["batter"] + FEATURE_COLUMNS
+    
+        latest_snapshot = (
+            rows.sort_values(["batter", "game_date", "game_pk"])
+            .groupby("batter", as_index=False)
+            .tail(1)[snapshot_columns]
+            .copy()
+        )
+    
+        league_pitcher_hr_rate = float(
+            pd.to_numeric(
+                rows["pitcher_hr_rate"],
+                errors="coerce",
+            ).replace(
+                [np.inf, -np.inf],
+                np.nan,
+            ).dropna().median()
+        )
+    
+        latest_snapshot["pitcher_hr_rate"] = league_pitcher_hr_rate
+    
+        snapshot_path = MODEL_DIR / "hr_batter_features.csv"
+    
+        latest_snapshot.to_csv(
+            snapshot_path,
+            index=False,
+        )
+    
+        print(
+            f"Saved live batter feature snapshot: "
+            f"{snapshot_path} "
+            f"({len(latest_snapshot):,} batters)"
+        )
+    
+        training = rows[
+            FEATURE_COLUMNS + ["home_run"]
+        ].copy()
+    
+        training = training.replace(
             [np.inf, -np.inf],
             np.nan,
-        ).dropna().median()
-    )
-
-    latest_snapshot["pitcher_hr_rate"] = league_pitcher_hr_rate
-
-    snapshot_path = MODEL_DIR / "hr_batter_features.csv"
-
-    latest_snapshot.to_csv(
-        snapshot_path,
-        index=False,
-    )
-
-    print(
-        f"Saved live batter feature snapshot: "
-        f"{snapshot_path} "
-        f"({len(latest_snapshot):,} batters)"
-    )
-
-    training = rows[
-        FEATURE_COLUMNS + ["home_run"]
-    ].copy()
-
-    training = training.replace(
-        [np.inf, -np.inf],
-        np.nan,
-    ).dropna()
+        ).dropna()
 
     print(
         f"Training rows: {len(training):,} | "
