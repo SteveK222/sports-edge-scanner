@@ -27,8 +27,8 @@ from src.storage import get_client, save_pick
 from src.telegram import send_message, format_pick
 
 
-HR_MIN_EDGE_PCT = 5.0
-HR_MIN_EV_PCT = 8.0
+HR_MIN_EDGE_PCT = 2.0
+HR_MIN_EV_PCT = 3.0
 
 HR_LOOKAHEAD_HOURS = 10
 
