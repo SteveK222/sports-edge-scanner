@@ -217,8 +217,6 @@ def hr_scan(db):
                 qualified.append(
                     pick
                 )
-                        pick
-                    )
 
         except Exception as exc:
 
