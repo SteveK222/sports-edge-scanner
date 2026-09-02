@@ -162,6 +162,29 @@ def hr_scan(db):
                 REGIONS,
                 "batter_home_runs",
             )
+            print(
+    "DEBUG HR RESPONSE:",
+    event["away_team"],
+    "@",
+    event["home_team"],
+    "| bookmakers:",
+    len(event_odds.get("bookmakers", []))
+)
+
+for book in event_odds.get("bookmakers", []):
+    print(
+        "  BOOK:",
+        book.get("title"),
+        "| MARKETS:",
+        [m.get("key") for m in book.get("markets", [])]
+    )
+
+    for market in book.get("markets", []):
+        if market.get("key") == "batter_home_runs":
+            print(
+                "    HR OUTCOMES SAMPLE:",
+                market.get("outcomes", [])[:4]
+            )
 
             candidates = get_hr_candidates(
                 event_odds
